@@ -1,0 +1,200 @@
+
+<div class="container mx-auto p-4">
+  
+
+  <!-- Sales Entry Section -->
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">New Sale</h2>
+    <div class="label-text">
+      
+    <!-- Customer Details (Optional) -->
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      Customer Name:<input 
+        placeholder="Customer Name" 
+        class="p-2 border rounded"
+        [(ngModel)]="customerName"
+      ><br>
+      <br>
+      Customer Phone:<input 
+        placeholder="Customer Phone" 
+        class="p-2 border rounded"
+        [(ngModel)]="customerPhone"
+      >
+    </div>
+    <br>
+
+    <!-- Medicine Entry -->
+    <div class="flex gap-4 mb-4">
+      <br>Medicine Name:<input 
+        type="text" 
+        placeholder="Medicine Name" 
+        class="p-2 border rounded flex-grow"
+        [(ngModel)]="medicineName"
+      >
+      Price:<input 
+        type="number" 
+        placeholder="Price" 
+        class="p-2 border rounded w-24"
+        [(ngModel)]="medicinePrice"
+      >
+      Quantity:<input 
+        type="number" 
+        placeholder="Quantity" 
+        class="p-2 border rounded w-24"
+        [(ngModel)]="quantity"
+      >
+      <button 
+        class="bg-blue-500 text-white px-4 py-2 rounded"
+        (click)="addItem()"
+      >
+        Add
+      </button>
+    </div>
+    <br>
+   
+</div>
+    <!-- Current Sale Items -->
+    <table class="w-full mb-4">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="p-2 text-left">Medicine</th>
+          <th class="p-2 text-right">Quantity</th>
+          <th class="p-2 text-right">Price</th>
+          <th class="p-2 text-right">Total</th>
+          <th class="p-2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of currentSale.items">
+          <td class="p-2">{{item.medicineName}}</td>
+          <td class="p-2 text-right">{{item.quantity}}</td>
+          <td class="p-2 text-right">₹{{item.unitPrice}}</td>
+          <td class="p-2 text-right">₹{{item.total}}</td>
+          <td class="p-2">
+            <button 
+              class="text-red-500"
+              (click)="removeItem(item)"
+            >
+              Remove
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br>
+    <br>
+    <br>
+
+    <div class="label-text">
+    <!-- Sale Summary -->
+    <div class="bg-gray-50 p-4 rounded">
+      <div class="flex justify-between mb-2">
+        <span>Subtotal:</span>
+        <span>₹{{currentSale.subtotal}}</span>
+      </div>
+      <div class="flex justify-between mb-2">
+        <span>Tax (18%):</span>
+        <span>₹{{currentSale.tax}}</span>
+      </div>
+      <div class="label-text">
+      <div class="flex justify-between mb-2">
+        <span>Discount:</span>
+        <input 
+          type="number" 
+          class="w-24 p-1 border rounded text-right"
+          [(ngModel)]="currentSale.discount"
+          (ngModelChange)="calculateTotal()"
+        >
+      </div>
+      <div class="flex justify-between font-bold">
+        <span>Total:</span>
+        <span>₹{{currentSale.total}}</span>
+      </div>
+    </div>
+</div>
+    <!-- Complete Sale Button -->
+    <div class="button-container">
+      <button
+        class="bg-green-500 text-white"
+        (click)="completeSale()"
+      >
+        Complete Sale
+      </button>
+    
+      <button
+        class="bg-blue-500 text-white"
+        (click)="onViewSalesHistory()"
+      >
+        View Sale History
+      </button>
+    </div>
+
+
+   
+    
+
+  <!-- Sales History Section -->
+  <div *ngIf="showSalesHistory">
+    <h2 class="text-2xl font-bold mb-4">Sales History</h2>
+
+    <!-- Date Filter -->
+<div class="flex items-center mb-4">
+  <input 
+    type="date" 
+    class="p-2 border rounded mr-2"
+    [(ngModel)]="filterDate"
+  >
+  <button 
+    class="bg-blue-500 text-white px-4 py-2 rounded"
+    (click)="filterSalesByDate()"
+  >
+    Filter
+  </button>
+  <button 
+    class="bg-gray-300 text-black px-4 py-2 rounded ml-2"
+    (click)="resetFilter()"
+  >
+    Reset
+  </button>
+</div>
+
+
+
+    <table class="w-full">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="p-2 text-left">Date</th>
+          <th class="p-2 text-left">Customer</th>
+          <th class="p-2 text-left">Phone</th>
+          <th class="p-2 text-left">Medicines</th>
+          <th class="p-2 text-right">Items</th>
+          <th class="p-2 text-right">Total</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr *ngFor="let sale of filteredSalesHistory">
+      
+          <td class="p-2">{{sale.date | date}}</td>
+          <td class="p-2">{{sale.customerName}}</td>
+          <td class="p-2">{{sale.customerPhone}}</td>
+          <td class="p-2">
+            <ul class="list-none">
+              <li *ngFor="let item of sale.items" class="mb-1">
+                {{item.medicineName}} ({{item.quantity}})
+              </li>
+            </ul>
+          </td>
+          <td class="p-2 text-right">{{sale.items.length}}</td>
+          <td class="p-2 text-right">₹{{sale.total}}</td>
+        </tr>
+      
+  
+        
+      </tbody>
+
+
+    </table>
+  </div>
+</div>
